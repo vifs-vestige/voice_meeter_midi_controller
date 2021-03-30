@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.0.0" />
+    <PackageReference Include="VoicemeeterRemote" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="VoiceMeeter\Potato\" />
   </ItemGroup>
 
 </Project>

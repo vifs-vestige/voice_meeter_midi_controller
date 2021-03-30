@@ -18,6 +18,17 @@ namespace voice_meeter_midi_controller{
             
         }
 
+        private void turnLightOn() {
+
+
+            ////this works v
+            //var midiOut = new MidiOut(1);
+            //var note = 12;
+            //var velcoity = 1;
+            //var noteOnEvent = new NoteOnEvent(0L, 1, note, velcoity, 1);
+            //midiOut.Send(noteOnEvent.GetAsShortMessage());
+        }
+
         public void Dispose() {
             DeviceIn.Stop();
             DeviceIn.Dispose();
@@ -29,7 +40,17 @@ namespace voice_meeter_midi_controller{
         }
 
         private void midiIn_MessageReceived(object sender, MidiInMessageEventArgs e) {
-            //MainWindow.WindowStuff.MidiTest.Text = "b";
+
+            var temp = e.MidiEvent.CommandCode;
+            if(e.MidiEvent.CommandCode == MidiCommandCode.NoteOn) {
+                var temp2 = (NoteOnEvent)e.MidiEvent;
+                var temp3 = temp2.NoteNumber;
+            } else if(e.MidiEvent.CommandCode ==  MidiCommandCode.NoteOff) {
+                var temp2 = (NoteEvent)e.MidiEvent;
+                var temp3 = temp2.NoteNumber;
+            } else if(e.MidiEvent.CommandCode == MidiCommandCode.ControlChange) {
+                //slider
+            }
             Application.Current.Dispatcher.Invoke(new Action(() => { MainWindow.WindowStuff.MidiTest.Text = e.MidiEvent.ToString(); }));
         }
     }
