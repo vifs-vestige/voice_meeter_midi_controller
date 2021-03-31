@@ -26,9 +26,23 @@ namespace voice_meeter_midi_controller {
         public MainWindow() {
             InitializeComponent();
             WindowStuff = this;
-            var temp = new VoiceMeeterController();
-            var temp2 = temp.GetCurrentLevel(BusType.output, VoiceMeeterChannel.B3);
-            MidiTest.Text = temp2.ToString();
+            //var temp2 = temp.GetCurrentLevel(BusType.input, VoiceMeeterChannel.A1);
+            //MidiTest.Text = temp2.ToString();
+
+            Midi = new MidiController("APC MINI");
+            //var temp = new VoiceMeeterController(Midi);
+            Midi.turnLightOn(0, 0);
+            Midi.turnLightOn(0, 0);
+            Midi.turnLightOn(8, 0);
+            Midi.turnLightOn(16, 0);
+            Midi.turnLightOn(24, 0);
+            Midi.turnLightOn(32, 0);
+            Midi.turnLightOn(40, 0);
+            Midi.turnLightOn(48, 0);
+            Midi.turnLightOn(56, 0);
         }
+
+
+
     }
 }

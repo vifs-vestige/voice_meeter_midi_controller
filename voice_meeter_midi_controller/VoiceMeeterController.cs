@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
+using System.Windows;
 using voice_meeter_midi_controller.Enums;
 
 namespace voice_meeter_midi_controller {
     class VoiceMeeterController : IDisposable {
         private Task VoiceMeeterConnection;
         private VoiceMeeterBase VoiceMeeterVersion;
+        private DispatcherTimer Dispatcher;
+        private MidiController Midi;
 
-        public VoiceMeeterController() {
+        public VoiceMeeterController(MidiController midi) {
             VoiceMeeterConnection = VoiceMeeter.Remote.Initialize(Voicemeeter.RunVoicemeeterParam.VoicemeeterPotato);
             VoiceMeeterVersion = new VMPotato();
+            Dispatcher = new DispatcherTimer();
+            Dispatcher.Tick += thingy;
+            Dispatcher.Interval = new TimeSpan(0, 0, 0, 0, 5);
+            Dispatcher.Start();
+            Midi = midi;
         }
 
         public void Mute(BusType busType, int channel, bool mute) {
@@ -27,6 +36,7 @@ namespace voice_meeter_midi_controller {
         public void ChangeGain(BusType busType, int channel, float gain) {
             VoiceMeeter.Remote.SetParameter($"{busType.GetString()}[{channel}].gain", gain);
         }
+
 
         public float GetCurrentLevel(BusType busType, VoiceMeeterChannel channel) {
             Voicemeeter.LevelType levelType;
@@ -48,6 +58,12 @@ namespace voice_meeter_midi_controller {
             }
             return level;
 
+        }
+
+        private void thingy(object sender, EventArgs e) {
+            var temp = GetCurrentLevel(BusType.input, VoiceMeeterChannel.A1);
+            Application.Current.Dispatcher.Invoke(new Action(() => { MainWindow.WindowStuff.MidiTest.Text = (temp*1000).ToString(); }));
+            Midi.showVolumeLevel(temp);
         }
 
         public void Dispose() {
